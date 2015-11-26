@@ -1,16 +1,15 @@
-package com.xeiam.xchange.service.polling.trade.params;
+package com.xeiam.xchange.service.polling.params;
 
 import com.xeiam.xchange.currency.CurrencyPair;
 
-@Deprecated
-public class DefaultTradeHistoryParamCurrencyPair implements TradeHistoryParamCurrencyPair {
+public class DefaultParamCurrencyPair implements ParamCurrencyPair {
 
   private CurrencyPair pair;
 
-  public DefaultTradeHistoryParamCurrencyPair() {
+  public DefaultParamCurrencyPair() {
   }
 
-  public DefaultTradeHistoryParamCurrencyPair(CurrencyPair pair) {
+  public DefaultParamCurrencyPair(CurrencyPair pair) {
     this.pair = pair;
   }
 

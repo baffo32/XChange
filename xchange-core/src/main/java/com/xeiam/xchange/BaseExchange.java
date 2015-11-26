@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
+import com.xeiam.xchange.service.polling.marketdata.AdaptedMarketDataService;
+import com.xeiam.xchange.service.polling.marketdata.AdaptedPollingMarketDataService;
+import com.xeiam.xchange.service.polling.marketdata.MarketDataService;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +30,8 @@ public abstract class BaseExchange implements Exchange {
   protected ExchangeSpecification exchangeSpecification;
   protected ExchangeMetaData metaData;
 
+  protected MarketDataService marketDataService;
+  @Deprecated
   protected PollingMarketDataService pollingMarketDataService;
   protected PollingTradeService pollingTradeService;
   protected PollingAccountService pollingAccountService;
@@ -158,9 +163,21 @@ public abstract class BaseExchange implements Exchange {
   }
 
   @Override
+  public MarketDataService getMarketDataService() {
+
+    if (pollingMarketDataService != null)
+      return new AdaptedPollingMarketDataService(this, pollingMarketDataService);
+    else
+      return marketDataService;
+  }
+
+  @Override
   public PollingMarketDataService getPollingMarketDataService() {
 
-    return pollingMarketDataService;
+    if (marketDataService != null)
+      return new AdaptedMarketDataService(this, marketDataService);
+    else
+      return pollingMarketDataService;
   }
 
   @Override

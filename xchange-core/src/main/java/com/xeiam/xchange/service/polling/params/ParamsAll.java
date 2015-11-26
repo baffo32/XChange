@@ -1,22 +1,20 @@
-package com.xeiam.xchange.service.polling.trade.params;
+package com.xeiam.xchange.service.polling.params;
 
 import java.util.Date;
 
 import com.xeiam.xchange.currency.CurrencyPair;
 
 /**
- * Generic {@link TradeHistoryParams} implementation that implements all the interfaces in the hierarchy and can be safely (without getting
- * exceptions, if that all the required fields are non-null) passed to any implementation of
- * {@link com.xeiam.xchange.service.polling.trade.PollingTradeService#getTradeHistory(TradeHistoryParams)} .
+ * Generic {@link QueryParams} implementation that implements all the interfaces in the hierarchy and can be safely (without getting
+ * exceptions, if that all the required fields are non-null) passed to any polling service implementation which accepts an interface in this package.
  */
-@Deprecated
-public class TradeHistoryParamsAll
-    implements TradeHistoryParamsTimeSpan, TradeHistoryParamPaging, TradeHistoryParamsIdSpan, TradeHistoryParamOffset, TradeHistoryParamCurrencyPair {
+public class ParamsAll
+    implements ParamsTimeSpan, ParamPaging, ParamsIdSpan, ParamOffset, ParamCurrencyPair {
 
   private Integer pageLength;
   private Integer pageNumber;
-  private String startId;
-  private String endId;
+  private Long startId;
+  private Long endId;
   private Date startTime;
   private Date endTime;
   private Long offset;
@@ -35,25 +33,25 @@ public class TradeHistoryParamsAll
   }
 
   @Override
-  public String getStartId() {
+  public Long getStartId() {
 
     return startId;
   }
 
   @Override
-  public void setEndId(String endId) {
+  public void setEndId(Long endId) {
 
     this.endId = endId;
   }
 
   @Override
-  public String getEndId() {
+  public Long getEndId() {
 
     return endId;
   }
 
   @Override
-  public void setStartId(String from) {
+  public void setStartId(Long from) {
 
     startId = from;
   }
@@ -71,6 +69,12 @@ public class TradeHistoryParamsAll
   }
 
   @Override
+  public boolean extendsToEnd() {
+
+    return false;
+  }
+
+  @Override
   public void setStartTime(Date startTime) {
 
     this.startTime = startTime;
@@ -80,6 +84,12 @@ public class TradeHistoryParamsAll
   public Date getStartTime() {
 
     return startTime;
+  }
+
+  @Override
+  public boolean extendsToStart() {
+
+    return false;
   }
 
   @Override

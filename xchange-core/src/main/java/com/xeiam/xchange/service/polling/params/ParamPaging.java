@@ -1,7 +1,6 @@
-package com.xeiam.xchange.service.polling.trade.params;
+package com.xeiam.xchange.service.polling.params;
 
-@Deprecated
-public interface TradeHistoryParamPaging extends TradeHistoryParams {
+public interface ParamPaging extends QueryParams {
 
   void setPageLength(Integer pageLength);
 

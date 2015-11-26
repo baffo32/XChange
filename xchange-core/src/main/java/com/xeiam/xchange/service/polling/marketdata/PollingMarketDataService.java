@@ -13,17 +13,10 @@ import com.xeiam.xchange.exceptions.NotYetImplementedForExchangeException;
 import com.xeiam.xchange.service.polling.BasePollingService;
 
 /**
- * <p>
- * Interface to provide the following to {@link Exchange}:
- * </p>
- * <ul>
- * <li>Standard methods available to explore the market data</li>
- * </ul>
- * <p>
- * The implementation of this service is expected to be based on a client polling mechanism of some kind
- * </p>
+ * @deprecated Implement individual interfaces in this package separately.
  */
-public interface PollingMarketDataService extends BasePollingService {
+@Deprecated
+public interface PollingMarketDataService extends MarketDataService {
 
   /**
    * <p>

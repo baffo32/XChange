@@ -8,6 +8,7 @@ package com.xeiam.xchange.exceptions;
  * <li>Indication that the exchange does not support the requested function or data</li>
  * </ul>
  */
+@Deprecated
 public class NotAvailableFromExchangeException extends UnsupportedOperationException {
 
   /**

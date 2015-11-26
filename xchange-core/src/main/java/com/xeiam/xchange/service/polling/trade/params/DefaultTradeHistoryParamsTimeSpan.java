@@ -5,6 +5,7 @@ import java.util.Date;
 /**
  * Common implementation of {@link TradeHistoryParamsTimeSpan}.
  */
+@Deprecated
 public class DefaultTradeHistoryParamsTimeSpan implements TradeHistoryParamsTimeSpan {
 
   private Date endTime;

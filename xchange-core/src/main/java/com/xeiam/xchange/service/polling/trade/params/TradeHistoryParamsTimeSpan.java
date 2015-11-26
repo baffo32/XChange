@@ -6,6 +6,7 @@ import java.util.Date;
  * Parameters type for {@link com.xeiam.xchange.service.polling.trade.PollingTradeService#getTradeHistory(TradeHistoryParams)} with start and end
  * timestamps.
  */
+@Deprecated
 public interface TradeHistoryParamsTimeSpan extends TradeHistoryParams {
 
   void setStartTime(Date startTime);

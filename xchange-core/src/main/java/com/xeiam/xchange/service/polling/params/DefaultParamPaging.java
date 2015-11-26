@@ -1,22 +1,21 @@
-package com.xeiam.xchange.service.polling.trade.params;
+package com.xeiam.xchange.service.polling.params;
 
 /**
- * Common implementation of {@link TradeHistoryParamPaging} interface
+ * Common implementation of {@link ParamPaging} interface
  */
-@Deprecated
-public class DefaultTradeHistoryParamPaging implements TradeHistoryParamPaging {
+public class DefaultParamPaging implements ParamPaging {
 
   private Integer pageLength;
   private Integer pageNumber;
 
-  public DefaultTradeHistoryParamPaging() {
+  public DefaultParamPaging() {
   }
 
-  public DefaultTradeHistoryParamPaging(Integer pageLength) {
+  public DefaultParamPaging(Integer pageLength) {
     this(pageLength, 0);
   }
 
-  public DefaultTradeHistoryParamPaging(Integer pageLength, Integer pageNumber) {
+  public DefaultParamPaging(Integer pageLength, Integer pageNumber) {
 
     this.pageLength = pageLength;
     this.pageNumber = pageNumber;

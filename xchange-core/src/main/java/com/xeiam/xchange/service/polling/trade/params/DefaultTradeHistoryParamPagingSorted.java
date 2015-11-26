@@ -1,5 +1,6 @@
 package com.xeiam.xchange.service.polling.trade.params;
 
+@Deprecated
 public class DefaultTradeHistoryParamPagingSorted extends DefaultTradeHistoryParamPaging implements TradeHistoryParamsSorted {
 
   private Order order = Order.asc;
