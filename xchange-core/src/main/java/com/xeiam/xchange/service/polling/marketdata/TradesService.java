@@ -23,7 +23,7 @@ public interface TradesService extends MarketDataService {
   /**
    * Get the trades performed by the exchange.
    * <p/>
-   * If you are calling this method for single exchange, known at the development time, you may pass an object of specific *TradeHistoryParam class
+   * If you are calling this method for single exchange, known at the development time, you may pass an object of specific *TradesParam class
    * that is nested in that exchange's marketdata service.
    * <p/>
    * If, however, you are fetching trades from many exchanges using the same code, you will find it useful to create the parameter object
@@ -42,7 +42,6 @@ public interface TradesService extends MarketDataService {
    *        of the method.
    * @return Trades as returned by the exchange API
    * @throws ExchangeException - Indication that the exchange reported some kind of error with the request or response
-   * @throws NotAvailableFromExchangeException - Indication that the exchange does not support the requested function or data
    * @throws NotYetImplementedForExchangeException - Indication that the exchange supports the requested function or data, but it has not yet been
    *         implemented
    * @throws IOException - Indication that a networking error occurred while fetching JSON data

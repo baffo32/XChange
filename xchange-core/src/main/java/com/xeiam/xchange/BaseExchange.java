@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
+import com.xeiam.xchange.service.polling.account.AccountService;
+import com.xeiam.xchange.service.polling.account.AdaptedAccountService;
+import com.xeiam.xchange.service.polling.account.AdaptedPollingAccountService;
 import com.xeiam.xchange.service.polling.marketdata.AdaptedMarketDataService;
 import com.xeiam.xchange.service.polling.marketdata.AdaptedPollingMarketDataService;
 import com.xeiam.xchange.service.polling.marketdata.MarketDataService;
@@ -34,6 +37,8 @@ public abstract class BaseExchange implements Exchange {
   @Deprecated
   protected PollingMarketDataService pollingMarketDataService;
   protected PollingTradeService pollingTradeService;
+  protected AccountService accountService;
+  @Deprecated
   protected PollingAccountService pollingAccountService;
   protected StreamingExchangeService streamingExchangeService;
 
@@ -187,9 +192,21 @@ public abstract class BaseExchange implements Exchange {
   }
 
   @Override
+  public AccountService getAccountService() {
+
+    if (pollingAccountService != null)
+      return new AdaptedPollingAccountService(this, pollingAccountService);
+    else
+      return accountService;
+  }
+
+  @Override
   public PollingAccountService getPollingAccountService() {
 
-    return pollingAccountService;
+    if (accountService != null)
+      return new AdaptedAccountService(this, accountService);
+    else
+      return pollingAccountService;
   }
 
   @Override

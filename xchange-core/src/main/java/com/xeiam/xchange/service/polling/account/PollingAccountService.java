@@ -20,7 +20,9 @@ import com.xeiam.xchange.service.polling.BasePollingService;
  * <p>
  * The implementation of this service is expected to be based on a client polling mechanism of some kind
  * </p>
+ * @deprecated Implement individual interfaces in this package separately.
  */
+@Deprecated
 public interface PollingAccountService extends BasePollingService {
 
   /**

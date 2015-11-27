@@ -23,7 +23,7 @@ public interface OrderBookService extends MarketDataService {
   /**
    * Get an order book representing the offered exchange rates (market depth)
    * <p/>
-   * If you are calling this method for single exchange, known at the development time, you may pass an object of specific *TradeHistoryParam class
+   * If you are calling this method for single exchange, known at the development time, you may pass an object of specific *OrderBookParam class
    * that is nested in that exchange's marketdata service.
    * <p/>
    * If, however, you are fetching trades from many exchanges using the same code, you will find it useful to create the parameter object
@@ -42,7 +42,6 @@ public interface OrderBookService extends MarketDataService {
    *        of the method.
    * @return The OrderBook, null if some sort of error occurred. Implementers should log the error.
    * @throws ExchangeException - Indication that the exchange reported some kind of error with the request or response
-   * @throws NotAvailableFromExchangeException - Indication that the exchange does not support the requested function or data
    * @throws NotYetImplementedForExchangeException - Indication that the exchange supports the requested function or data, but it has not yet been
    *         implemented
    * @throws IOException - Indication that a networking error occurred while fetching JSON data

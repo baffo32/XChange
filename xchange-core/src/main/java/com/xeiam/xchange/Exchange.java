@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.xeiam.xchange.dto.meta.ExchangeMetaData;
 import com.xeiam.xchange.exceptions.ExchangeException;
+import com.xeiam.xchange.service.polling.account.AccountService;
 import com.xeiam.xchange.service.polling.account.PollingAccountService;
 import com.xeiam.xchange.service.polling.marketdata.MarketDataService;
 import com.xeiam.xchange.service.polling.marketdata.PollingMarketDataService;
@@ -115,6 +116,12 @@ public interface Exchange {
    *
    * @return The exchange's polling account service
    */
+  AccountService getAccountService();
+
+  /**
+   * @deprecated Use {@link #getAccountService()} instead
+   */
+  @Deprecated
   PollingAccountService getPollingAccountService();
 
   /**

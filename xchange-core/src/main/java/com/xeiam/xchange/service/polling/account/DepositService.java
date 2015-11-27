@@ -1,36 +1,34 @@
-package com.xeiam.xchange.service.polling.marketdata;
-
-import java.io.IOException;
+package com.xeiam.xchange.service.polling.account;
 
 import com.xeiam.xchange.Exchange;
-import com.xeiam.xchange.currency.CurrencyPair;
-import com.xeiam.xchange.dto.marketdata.Ticker;
 import com.xeiam.xchange.exceptions.ExchangeException;
-import com.xeiam.xchange.exceptions.NotAvailableFromExchangeException;
 import com.xeiam.xchange.exceptions.NotYetImplementedForExchangeException;
+import com.xeiam.xchange.service.polling.params.ParamsAll;
+import com.xeiam.xchange.service.polling.params.QueryParams;
+
+import java.io.IOException;
+import java.math.BigDecimal;
 
 /**
  * <p>
  * Interface to provide the following to {@link Exchange}:
  * </p>
  * <ul>
- * <li>Standard method to poll the latest market {@link Ticker}.</li>
+ * <li>Standard method to deposit funds.</li>
  * </ul>
  */
-public interface TickerService extends MarketDataService {
+public interface DepositService extends AccountService {
 
   /**
-   * <p>
-   * Get a ticker representing the current exchange rate
-   * </p>
+   * Request a digital currency address to fund this account. Allows to fund the exchange account with digital currency from an external address
    *
-   * @param currencyPair (e.g. BTC/USD)
-   * @return The ticker, null if some sort of error occurred. Implementers should log the error.
+   * @param currency The digital currency that corresponds to the desired deposit address.
+   * @return the internal deposit address to send funds to
    * @throws ExchangeException - Indication that the exchange reported some kind of error with the request or response
    * @throws NotYetImplementedForExchangeException - Indication that the exchange supports the requested function or data, but it has not yet been
    *         implemented
    * @throws IOException - Indication that a networking error occurred while fetching JSON data
    */
-  Ticker getTicker(CurrencyPair currencyPair)
+  String requestDepositAddress(String currency)
       throws ExchangeException, NotYetImplementedForExchangeException, IOException;
 }
