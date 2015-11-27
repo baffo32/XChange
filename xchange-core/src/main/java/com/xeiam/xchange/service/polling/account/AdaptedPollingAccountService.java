@@ -44,9 +44,9 @@ public class AdaptedPollingAccountService extends BasePollingExchangeService imp
     return pollingAccountService.requestDepositAddress(currency);
   }
 
-  @Override public Long withdrawFunds(String currency, BigDecimal amount, String address)
+  @Override public String withdrawFunds(String currency, BigDecimal amount, String address)
       throws ExchangeException, NotAvailableFromExchangeException, NotYetImplementedForExchangeException, IOException {
 
-    return Long.valueOf(pollingAccountService.requestDepositAddress(currency));
+    return pollingAccountService.requestDepositAddress(currency);
   }
 }

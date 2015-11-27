@@ -30,6 +30,6 @@ public interface WithdrawService extends AccountService {
    *         implemented
    * @throws IOException - Indication that a networking error occurred while fetching JSON data
    */
-   Long withdrawFunds(String currency, BigDecimal amount, String address)
+   String withdrawFunds(String currency, BigDecimal amount, String address)
       throws ExchangeException, NotYetImplementedForExchangeException, IOException;
 }

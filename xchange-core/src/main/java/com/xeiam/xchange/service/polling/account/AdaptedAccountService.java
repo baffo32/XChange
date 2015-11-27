@@ -50,7 +50,7 @@ public class AdaptedAccountService extends BasePollingExchangeService implements
 
     WithdrawService withdrawService = (WithdrawService) accountService;
 
-    return withdrawService.withdrawFunds(currency, amount, address).toString();
+    return withdrawService.withdrawFunds(currency, amount, address);
   }
 
   @Override public String requestDepositAddress(String currency, String... args)
