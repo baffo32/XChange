@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 import com.xeiam.xchange.Exchange;
+import com.xeiam.xchange.currency.Currency;
 import com.xeiam.xchange.dto.account.AccountInfo;
 import com.xeiam.xchange.empoex.EmpoExAdapters;
 import com.xeiam.xchange.exceptions.NotAvailableFromExchangeException;
@@ -24,17 +25,18 @@ public class EmpoExAccountService extends EmpoExAccountServiceRaw implements Pol
   @Override
   public AccountInfo getAccountInfo() throws IOException {
 
-    return EmpoExAdapters.adaptBalances(super.getEmpoExBalances().get("available"));
+    // TODO empoex also provides "pending" and "held" balances; perhaps they are depositing and frozen?
+    return new AccountInfo(EmpoExAdapters.adaptBalances(super.getEmpoExBalances().get("available")));
   }
 
   @Override
-  public String withdrawFunds(String currency, BigDecimal amount, String address) throws IOException {
+  public String withdrawFunds(Currency currency, BigDecimal amount, String address) throws IOException {
 
     throw new NotAvailableFromExchangeException();
   }
 
   @Override
-  public String requestDepositAddress(String currency, String... args) throws IOException {
+  public String requestDepositAddress(Currency currency, String... args) throws IOException {
 
     throw new NotAvailableFromExchangeException();
   }

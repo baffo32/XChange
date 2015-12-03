@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 
 import com.xeiam.xchange.Exchange;
 import com.xeiam.xchange.coinbaseex.CoinbaseExAdapters;
+import com.xeiam.xchange.currency.Currency;
 import com.xeiam.xchange.dto.account.AccountInfo;
 import com.xeiam.xchange.exceptions.ExchangeException;
 import com.xeiam.xchange.exceptions.NotAvailableFromExchangeException;
@@ -21,17 +22,17 @@ public class CoinbaseExAccountService extends CoinbaseExAccountServiceRaw implem
   @Override
   public AccountInfo getAccountInfo()
       throws ExchangeException, NotAvailableFromExchangeException, NotYetImplementedForExchangeException, IOException {
-    return CoinbaseExAdapters.adaptAccountInfo(getCoinbaseExAccountInfo());
+    return new AccountInfo(CoinbaseExAdapters.adaptAccountInfo(getCoinbaseExAccountInfo()));
   }
 
   @Override
-  public String withdrawFunds(String currency, BigDecimal amount, String address)
+  public String withdrawFunds(Currency currency, BigDecimal amount, String address)
       throws ExchangeException, NotAvailableFromExchangeException, NotYetImplementedForExchangeException, IOException {
     throw new NotYetImplementedForExchangeException();
   }
 
   @Override
-  public String requestDepositAddress(String currency, String... args)
+  public String requestDepositAddress(Currency currency, String... args)
       throws ExchangeException, NotAvailableFromExchangeException, NotYetImplementedForExchangeException, IOException {
     throw new NotYetImplementedForExchangeException();
   }

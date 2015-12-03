@@ -4,18 +4,19 @@ import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.*;
 
-import com.xeiam.xchange.currency.Currencies;
+import com.xeiam.xchange.currency.Currency;
 import com.xeiam.xchange.currency.CurrencyPair;
 import com.xeiam.xchange.dto.Order.OrderType;
 import com.xeiam.xchange.dto.account.AccountInfo;
+import com.xeiam.xchange.dto.account.Wallet;
 import com.xeiam.xchange.dto.marketdata.OrderBook;
 import com.xeiam.xchange.dto.marketdata.Ticker;
 import com.xeiam.xchange.dto.marketdata.Trade;
 import com.xeiam.xchange.dto.marketdata.Trades;
+import com.xeiam.xchange.dto.account.Balance;
 import com.xeiam.xchange.dto.trade.LimitOrder;
 import com.xeiam.xchange.dto.trade.UserTrade;
 import com.xeiam.xchange.dto.trade.UserTrades;
-import com.xeiam.xchange.dto.trade.Wallet;
 import com.xeiam.xchange.mercadobitcoin.dto.MercadoBitcoinBaseTradeApiResult;
 import com.xeiam.xchange.mercadobitcoin.dto.account.MercadoBitcoinAccountInfo;
 import com.xeiam.xchange.mercadobitcoin.dto.marketdata.MercadoBitcoinOrderBook;
@@ -123,7 +124,7 @@ public final class MercadoBitcoinAdapters {
   }
 
   /**
-   * Adapts a MercadoBitcoinBaseTradeApiResult<MercadoBitcoinAccountInfo> to a AccountInfo
+   * Adapts a MercadoBitcoinBaseTradeApiResult<MercadoBitcoinAccountInfo> to an AccountInfo
    *
    * @param accountInfo The Mercado Bitcoin accountInfo
    * @param userName The user name
@@ -132,11 +133,11 @@ public final class MercadoBitcoinAdapters {
   public static AccountInfo adaptAccountInfo(MercadoBitcoinBaseTradeApiResult<MercadoBitcoinAccountInfo> accountInfo, String userName) {
 
     // Adapt to XChange DTOs
-    Wallet brlWallet = new Wallet(Currencies.BRL, accountInfo.getTheReturn().getFunds().getBrl(), "Brazilian Reais balance (R$ / BRL)");
-    Wallet btcWallet = new Wallet(Currencies.BTC, accountInfo.getTheReturn().getFunds().getBtc(), "Bitcoin balance (XBT / BTC)");
-    Wallet ltcWallet = new Wallet(Currencies.LTC, accountInfo.getTheReturn().getFunds().getLtc(), "Litecoin balance (XLT / LTC)");
+    Balance brlBalance = new Balance(Currency.BRL, accountInfo.getTheReturn().getFunds().getBrl());
+    Balance btcBalance = new Balance(Currency.BTC, accountInfo.getTheReturn().getFunds().getBtc());
+    Balance ltcBalance = new Balance(Currency.LTC, accountInfo.getTheReturn().getFunds().getLtc());
 
-    return new AccountInfo(userName, Arrays.asList(brlWallet, btcWallet, ltcWallet));
+    return new AccountInfo(userName, new Wallet(brlBalance, btcBalance, ltcBalance));
   }
 
   public static List<LimitOrder> adaptOrders(CurrencyPair currencyPair, MercadoBitcoinBaseTradeApiResult<MercadoBitcoinUserOrders> input) {
@@ -170,7 +171,7 @@ public final class MercadoBitcoinAdapters {
   }
 
   public static String adaptCurrencyPair(CurrencyPair pair) {
-    return (pair.baseSymbol + "_" + pair.counterSymbol).toLowerCase();
+    return (pair.base.getCurrencyCode() + "_" + pair.counter.getCurrencyCode()).toLowerCase();
   }
 
   public static UserTrades toUserTrades(CurrencyPair pair, MercadoBitcoinBaseTradeApiResult<MercadoBitcoinUserOrders> orders) {

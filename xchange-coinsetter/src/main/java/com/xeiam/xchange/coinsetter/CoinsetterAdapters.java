@@ -2,7 +2,6 @@ package com.xeiam.xchange.coinsetter;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -15,16 +14,16 @@ import com.xeiam.xchange.coinsetter.dto.marketdata.CoinsetterTicker;
 import com.xeiam.xchange.coinsetter.dto.marketdata.CoinsetterTrade;
 import com.xeiam.xchange.coinsetter.dto.order.response.CoinsetterOrder;
 import com.xeiam.xchange.coinsetter.dto.order.response.CoinsetterOrderList;
-import com.xeiam.xchange.currency.Currencies;
+import com.xeiam.xchange.currency.Currency;
 import com.xeiam.xchange.currency.CurrencyPair;
 import com.xeiam.xchange.dto.Order.OrderType;
-import com.xeiam.xchange.dto.account.AccountInfo;
+import com.xeiam.xchange.dto.account.Wallet;
 import com.xeiam.xchange.dto.marketdata.OrderBook;
 import com.xeiam.xchange.dto.marketdata.Ticker;
 import com.xeiam.xchange.dto.marketdata.Trade;
+import com.xeiam.xchange.dto.account.Balance;
 import com.xeiam.xchange.dto.trade.LimitOrder;
 import com.xeiam.xchange.dto.trade.OpenOrders;
-import com.xeiam.xchange.dto.trade.Wallet;
 
 /**
  * Various adapters for converting from Coinsetter DTOs to XChange DTOs.
@@ -42,7 +41,7 @@ public final class CoinsetterAdapters {
 
   public static String adaptSymbol(CurrencyPair currencyPair) {
 
-    return currencyPair.baseSymbol + currencyPair.counterSymbol;
+    return currencyPair.base.getCurrencyCode() + currencyPair.counter.getCurrencyCode();
   }
 
   public static OrderType adaptSide(String side) {
@@ -131,10 +130,10 @@ public final class CoinsetterAdapters {
     return new OrderBook(timeStamp, askOrders, bidOrders);
   }
 
-  public static AccountInfo adaptAccountInfo(String username, CoinsetterAccount account) {
+  public static Wallet adaptWallet(CoinsetterAccount account) {
 
-    return new AccountInfo(username,
-        Arrays.asList(new Wallet(Currencies.BTC, account.getBtcBalance()), new Wallet(Currencies.USD, account.getUsdBalance())));
+    return new Wallet(
+        new Balance(Currency.BTC, account.getBtcBalance()), new Balance(Currency.USD, account.getUsdBalance()));
   }
 
   public static OpenOrders adaptOpenOrders(CoinsetterOrderList orderList) {

@@ -24,10 +24,10 @@ import com.xeiam.xchange.bter.dto.marketdata.BTERTicker;
 import com.xeiam.xchange.bter.dto.marketdata.BTERTickers;
 import com.xeiam.xchange.bter.dto.marketdata.BTERTradeHistory;
 import com.xeiam.xchange.bter.dto.trade.BTEROpenOrders;
-import com.xeiam.xchange.currency.Currencies;
+import com.xeiam.xchange.currency.Currency;
 import com.xeiam.xchange.currency.CurrencyPair;
 import com.xeiam.xchange.dto.Order.OrderType;
-import com.xeiam.xchange.dto.account.AccountInfo;
+import com.xeiam.xchange.dto.account.Wallet;
 import com.xeiam.xchange.dto.marketdata.OrderBook;
 import com.xeiam.xchange.dto.marketdata.Ticker;
 import com.xeiam.xchange.dto.marketdata.Trade;
@@ -110,15 +110,15 @@ public class BTERAdapterTest {
     ObjectMapper mapper = new ObjectMapper();
     BTERFunds funds = mapper.readValue(is, BTERFunds.class);
 
-    AccountInfo accountInfo = BTERAdapters.adaptAccountInfo(funds);
+    Wallet wallet = BTERAdapters.adaptWallet(funds);
 
-    assertThat(accountInfo.getWallets()).hasSize(4);
-    assertThat(accountInfo.getBalance(Currencies.BTC)).isEqualTo("0.00010165");
+    assertThat(wallet.getBalances()).hasSize(4);
+    assertThat(wallet.getBalance(Currency.BTC).getTotal()).isEqualTo("0.00010165");
 
-    assertThat(accountInfo.getWallet(Currencies.BTC).getAvailable()).isEqualTo(new BigDecimal("0.00010165"));
-    assertThat(accountInfo.getWallet(Currencies.BTC).getFrozen()).isEqualTo(BigDecimal.ZERO);
-    assertThat(accountInfo.getWallet(Currencies.LTC).getAvailable()).isEqualTo(new BigDecimal("0.00166859"));
-    assertThat(accountInfo.getWallet(Currencies.LTC).getFrozen()).isEqualTo(new BigDecimal("0.384"));
+    assertThat(wallet.getBalance(Currency.BTC).getAvailable()).isEqualTo(new BigDecimal("0.00010165"));
+    assertThat(wallet.getBalance(Currency.BTC).getFrozen()).isEqualTo(BigDecimal.ZERO);
+    assertThat(wallet.getBalance(Currency.LTC).getAvailable()).isEqualTo(new BigDecimal("0.00166859"));
+    assertThat(wallet.getBalance(Currency.LTC).getFrozen()).isEqualTo(new BigDecimal("0.384"));
   }
 
   @Test

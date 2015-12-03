@@ -3,22 +3,22 @@ package com.xeiam.xchange.loyalbit;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import com.xeiam.xchange.currency.Currencies;
+import com.xeiam.xchange.currency.Currency;
 import com.xeiam.xchange.currency.CurrencyPair;
 import com.xeiam.xchange.dto.Order;
 import com.xeiam.xchange.dto.account.AccountInfo;
+import com.xeiam.xchange.dto.account.Wallet;
 import com.xeiam.xchange.dto.marketdata.OrderBook;
 import com.xeiam.xchange.dto.marketdata.Trades.TradeSortType;
+import com.xeiam.xchange.dto.account.Balance;
 import com.xeiam.xchange.dto.trade.LimitOrder;
 import com.xeiam.xchange.dto.trade.UserTrade;
 import com.xeiam.xchange.dto.trade.UserTrades;
-import com.xeiam.xchange.dto.trade.Wallet;
 import com.xeiam.xchange.loyalbit.dto.account.LoyalbitBalance;
 import com.xeiam.xchange.loyalbit.dto.marketdata.LoyalbitOrderBook;
 import com.xeiam.xchange.loyalbit.dto.trade.LoyalbitOrder;
@@ -43,14 +43,13 @@ public final class LoyalbitAdapters {
   }
 
   public static AccountInfo adaptAccountInfo(LoyalbitBalance loyalbitBalance, String userName) {
-    // FIXME: the second parameter should be sum of (available, reservedOrder, reservedWithdraw)
-    // keep it as available for safe reason, will be fixed in XChange 4.0.0
-    Wallet usdWallet = new Wallet(Currencies.USD, loyalbitBalance.getAvailableUsd(), loyalbitBalance.getAvailableUsd(),
-        loyalbitBalance.getReservedOrderUsd());
-    Wallet btcWallet = new Wallet(Currencies.BTC, loyalbitBalance.getAvailableBtc(), loyalbitBalance.getAvailableBtc(),
-        loyalbitBalance.getReservedOrderBtc());
 
-    return new AccountInfo(userName, loyalbitBalance.getFee(), Arrays.asList(usdWallet, btcWallet));
+    Balance usdBalance = new Balance.Builder().currency(Currency.USD).available(loyalbitBalance.getAvailableUsd())
+        .frozen(loyalbitBalance.getReservedOrderUsd()).withdrawing(loyalbitBalance.getReservedWithdrawUsd()).build();
+    Balance btcBalance = new Balance.Builder().currency(Currency.BTC).available(loyalbitBalance.getAvailableBtc())
+        .frozen(loyalbitBalance.getReservedOrderBtc()).withdrawing(loyalbitBalance.getReservedWithdrawBtc()).build();
+
+    return new AccountInfo(userName, loyalbitBalance.getFee(), new Wallet(usdBalance, btcBalance));
   }
 
   public static OrderBook adaptOrderBook(LoyalbitOrderBook loyalbitOrderBook, CurrencyPair currencyPair) {
@@ -99,7 +98,7 @@ public final class LoyalbitAdapters {
       final CurrencyPair currencyPair = CurrencyPair.BTC_USD;
 
       UserTrade trade = new UserTrade(orderType, tradableAmount, currencyPair, price, timestamp, tradeId, orderId, feeAmount,
-          currencyPair.counterSymbol);
+          currencyPair.counter.getCurrencyCode());
       trades.add(trade);
     }
 

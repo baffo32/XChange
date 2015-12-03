@@ -3,7 +3,6 @@ package com.xeiam.xchange.bitso;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -12,19 +11,19 @@ import com.xeiam.xchange.bitso.dto.marketdata.BitsoOrderBook;
 import com.xeiam.xchange.bitso.dto.marketdata.BitsoTicker;
 import com.xeiam.xchange.bitso.dto.marketdata.BitsoTransaction;
 import com.xeiam.xchange.bitso.dto.trade.BitsoUserTransaction;
-import com.xeiam.xchange.currency.Currencies;
+import com.xeiam.xchange.currency.Currency;
 import com.xeiam.xchange.currency.CurrencyPair;
 import com.xeiam.xchange.dto.Order;
-import com.xeiam.xchange.dto.account.AccountInfo;
+import com.xeiam.xchange.dto.account.Wallet;
 import com.xeiam.xchange.dto.marketdata.OrderBook;
 import com.xeiam.xchange.dto.marketdata.Ticker;
 import com.xeiam.xchange.dto.marketdata.Trade;
 import com.xeiam.xchange.dto.marketdata.Trades;
 import com.xeiam.xchange.dto.marketdata.Trades.TradeSortType;
+import com.xeiam.xchange.dto.account.Balance;
 import com.xeiam.xchange.dto.trade.LimitOrder;
 import com.xeiam.xchange.dto.trade.UserTrade;
 import com.xeiam.xchange.dto.trade.UserTrades;
-import com.xeiam.xchange.dto.trade.Wallet;
 import com.xeiam.xchange.utils.DateUtils;
 
 public final class BitsoAdapters {
@@ -38,12 +37,12 @@ public final class BitsoAdapters {
         .vwap(t.getVwap()).volume(t.getVolume()).timestamp(t.getTimestamp()).build();
   }
 
-  public static AccountInfo adaptAccountInfo(BitsoBalance bitsoBalance, String userName) {
+  public static Wallet adaptWallet(BitsoBalance bitsoBalance) {
     // Adapt to XChange DTOs
-    Wallet mxnWallet = new Wallet(Currencies.MXN, bitsoBalance.getMxnBalance(), bitsoBalance.getMxnAvailable(), bitsoBalance.getMxnReserved());
-    Wallet btcWallet = new Wallet(Currencies.BTC, bitsoBalance.getBtcBalance(), bitsoBalance.getBtcAvailable(), bitsoBalance.getBtcReserved());
+    Balance mxnBalance = new Balance(Currency.MXN, bitsoBalance.getMxnBalance(), bitsoBalance.getMxnAvailable(), bitsoBalance.getMxnReserved());
+    Balance btcBalance = new Balance(Currency.BTC, bitsoBalance.getBtcBalance(), bitsoBalance.getBtcAvailable(), bitsoBalance.getBtcReserved());
 
-    return new AccountInfo(userName, Arrays.asList(mxnWallet, btcWallet));
+    return new Wallet(mxnBalance, btcBalance);
   }
 
   public static OrderBook adaptOrderBook(BitsoOrderBook bitsoOrderBook, CurrencyPair currencyPair, int timeScale) {
@@ -128,9 +127,9 @@ public final class BitsoAdapters {
         final String tradeId = String.valueOf(transactionId);
         final String orderId = String.valueOf(bitsoUserTransaction.getOrderId());
         final BigDecimal feeAmount = bitsoUserTransaction.getFee();
-        final CurrencyPair currencyPair = new CurrencyPair(Currencies.BTC, Currencies.MXN);
+        final CurrencyPair currencyPair = new CurrencyPair(Currency.BTC, Currency.MXN);
 
-        String feeCurrency = sell ? currencyPair.counterSymbol : currencyPair.baseSymbol;
+        String feeCurrency = sell ? currencyPair.counter.getCurrencyCode() : currencyPair.base.getCurrencyCode();
         UserTrade trade = new UserTrade(orderType, tradableAmount, currencyPair, price, timestamp, tradeId, orderId, feeAmount, feeCurrency);
         trades.add(trade);
       }

@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 
 import com.xeiam.xchange.Exchange;
 import com.xeiam.xchange.cryptsy.CryptsyAdapters;
+import com.xeiam.xchange.currency.Currency;
 import com.xeiam.xchange.dto.account.AccountInfo;
 import com.xeiam.xchange.exceptions.ExchangeException;
 import com.xeiam.xchange.service.polling.account.PollingAccountService;
@@ -27,17 +28,17 @@ public class CryptsyAccountService extends CryptsyAccountServiceRaw implements P
   @Override
   public AccountInfo getAccountInfo() throws IOException, ExchangeException {
 
-    return CryptsyAdapters.adaptAccountInfo(getCryptsyAccountInfo());
+    return new AccountInfo(CryptsyAdapters.adaptWallet(getCryptsyAccountInfo()));
   }
 
   @Override
-  public String withdrawFunds(String currency, BigDecimal amount, String address) throws IOException, ExchangeException {
+  public String withdrawFunds(Currency currency, BigDecimal amount, String address) throws IOException, ExchangeException {
 
     return makeCryptsyWithdrawal(address, amount).getReturnValue();
   }
 
   @Override
-  public String requestDepositAddress(String currency, String... args) throws IOException, ExchangeException {
+  public String requestDepositAddress(Currency currency, String... args) throws IOException, ExchangeException {
     return getCurrentCryptsyDepositAddresses().getReturnValue().get(currency);
     // return generateNewCryptsyDepositAddress(null, currency).getReturnValue().getAddress();
   }

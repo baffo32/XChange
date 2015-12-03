@@ -6,11 +6,12 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
 
+import com.xeiam.xchange.currency.Currency;
+import com.xeiam.xchange.dto.account.Wallet;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.xeiam.xchange.dto.Order.OrderType;
-import com.xeiam.xchange.dto.account.AccountInfo;
 import com.xeiam.xchange.dto.marketdata.OrderBook;
 import com.xeiam.xchange.dto.marketdata.Ticker;
 import com.xeiam.xchange.dto.marketdata.Trade;
@@ -25,7 +26,7 @@ import com.xeiam.xchange.exceptions.ExchangeException;
 
 public class CoinfloorAdaptersTest {
 
-  private AccountInfo cachedAccountInfo;
+  private Wallet cachedWallet;
   private Trades cachedTrades;
   private OrderBook cachedOrderBook;
   private CoinfloorAdapters coinfloorAdapters = new CoinfloorAdapters();
@@ -45,8 +46,8 @@ public class CoinfloorAdaptersTest {
 
     Map<String, Object> testObj = coinfloorAdapters.adaptBalances(result);
 
-    Assert.assertEquals(BigDecimal.valueOf(100014718, 4), ((AccountInfo) testObj.get("generic")).getBalance("BTC"));
-    Assert.assertEquals(BigDecimal.valueOf(931913, 2), ((AccountInfo) testObj.get("generic")).getBalance("GBP"));
+    Assert.assertEquals(BigDecimal.valueOf(100014718, 4), ((Wallet) testObj.get("generic")).getBalance(Currency.BTC).getTotal());
+    Assert.assertEquals(BigDecimal.valueOf(931913, 2), ((Wallet) testObj.get("generic")).getBalance(Currency.GBP).getTotal());
   }
 
   @Test
@@ -66,8 +67,8 @@ public class CoinfloorAdaptersTest {
 
     Assert.assertEquals(BigDecimal.valueOf(10000, 4), ((OpenOrders) testObj.get("generic")).getOpenOrders().get(0).getTradableAmount());
     Assert.assertEquals("211118", ((OpenOrders) testObj.get("generic")).getOpenOrders().get(0).getId());
-    Assert.assertEquals("GBP", ((OpenOrders) testObj.get("generic")).getOpenOrders().get(0).getCurrencyPair().counterSymbol);
-    Assert.assertEquals("BTC", ((OpenOrders) testObj.get("generic")).getOpenOrders().get(0).getCurrencyPair().baseSymbol);
+    Assert.assertEquals("GBP", ((OpenOrders) testObj.get("generic")).getOpenOrders().get(0).getCurrencyPair().counter.getCurrencyCode());
+    Assert.assertEquals("BTC", ((OpenOrders) testObj.get("generic")).getOpenOrders().get(0).getCurrencyPair().base.getCurrencyCode());
     Assert.assertEquals(OrderType.BID, ((OpenOrders) testObj.get("generic")).getOpenOrders().get(0).getType());
 
   }
@@ -200,8 +201,8 @@ public class CoinfloorAdaptersTest {
     Map<String, Object> testObj = coinfloorAdapters.adaptOrderOpened(result);
 
     Assert.assertEquals(BigDecimal.valueOf(10000, 4), ((LimitOrder) testObj.get("generic")).getTradableAmount());
-    Assert.assertEquals("GBP", ((LimitOrder) testObj.get("generic")).getCurrencyPair().counterSymbol);
-    Assert.assertEquals("BTC", ((LimitOrder) testObj.get("generic")).getCurrencyPair().baseSymbol);
+    Assert.assertEquals("GBP", ((LimitOrder) testObj.get("generic")).getCurrencyPair().counter.getCurrencyCode());
+    Assert.assertEquals("BTC", ((LimitOrder) testObj.get("generic")).getCurrencyPair().base.getCurrencyCode());
   }
 
   @Test
@@ -220,8 +221,8 @@ public class CoinfloorAdaptersTest {
     Map<String, Object> testObj = coinfloorAdapters.adaptOrderClosed(result);
 
     Assert.assertEquals(BigDecimal.valueOf(10000, 4), ((LimitOrder) testObj.get("generic")).getTradableAmount());
-    Assert.assertEquals("GBP", ((LimitOrder) testObj.get("generic")).getCurrencyPair().counterSymbol);
-    Assert.assertEquals("BTC", ((LimitOrder) testObj.get("generic")).getCurrencyPair().baseSymbol);
+    Assert.assertEquals("GBP", ((LimitOrder) testObj.get("generic")).getCurrencyPair().counter.getCurrencyCode());
+    Assert.assertEquals("BTC", ((LimitOrder) testObj.get("generic")).getCurrencyPair().base.getCurrencyCode());
   }
 
   @Test
@@ -241,8 +242,8 @@ public class CoinfloorAdaptersTest {
 
     Assert.assertEquals("211184", ((Trade) testObj.get("generic")).getId());
     Assert.assertEquals(BigDecimal.valueOf(4768, 4), ((Trade) testObj.get("generic")).getTradableAmount());
-    Assert.assertEquals("GBP", ((Trade) testObj.get("generic")).getCurrencyPair().counterSymbol);
-    Assert.assertEquals("BTC", ((Trade) testObj.get("generic")).getCurrencyPair().baseSymbol);
+    Assert.assertEquals("GBP", ((Trade) testObj.get("generic")).getCurrencyPair().counter.getCurrencyCode());
+    Assert.assertEquals("BTC", ((Trade) testObj.get("generic")).getCurrencyPair().base.getCurrencyCode());
     Assert.assertEquals(OrderType.ASK, ((Trade) testObj.get("generic")).getType());
   }
 
@@ -261,12 +262,12 @@ public class CoinfloorAdaptersTest {
 
     Map<String, Object> testObj = coinfloorAdapters.adaptBalancesChanged(result);
 
-    Assert.assertEquals(BigDecimal.valueOf(990000, 2), ((AccountInfo) testObj.get("generic")).getBalance("GBP"));
+    Assert.assertEquals(BigDecimal.valueOf(990000, 2), ((Wallet) testObj.get("generic")).getBalance(Currency.GBP).getTotal());
   }
 
   /**
-   * Experimental: USE WITH CAUTION. Adapters take every "BalancesUpdated" event, update local AccountInfo object with said new balance. This method
-   * will return that cached AccountInfo object.
+   * Experimental: USE WITH CAUTION. Adapters take every "BalancesUpdated" event, update local Wallet object with said new balance. This method
+   * will return that cached Wallet object.
    * 
    * @return Trades object representing all OrdersMatched trades recieved.
    * @throws ExchangeException if getBalances method has not yet been called, or response has not been recieved.
@@ -274,7 +275,7 @@ public class CoinfloorAdaptersTest {
   @Test(expected = ExchangeException.class)
   public void getCachedAccountInfo() {
 
-    if (cachedAccountInfo == null) {
+    if (cachedWallet == null) {
       throw new ExchangeException("getBalances method has not been called yet, or balance data has not been recieved!");
     }
 

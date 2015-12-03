@@ -26,9 +26,7 @@ package com.xeiam.xchange.coinmate;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.xeiam.xchange.coinmate.dto.account.CoinmateBalance;
 import com.xeiam.xchange.coinmate.dto.account.CoinmateBalanceData;
@@ -41,9 +39,11 @@ import com.xeiam.xchange.coinmate.dto.trade.CoinmateOpenOrders;
 import com.xeiam.xchange.coinmate.dto.trade.CoinmateOpenOrdersEntry;
 import com.xeiam.xchange.coinmate.dto.trade.CoinmateTransactionHistory;
 import com.xeiam.xchange.coinmate.dto.trade.CoinmateTransactionHistoryEntry;
+import com.xeiam.xchange.currency.Currency;
 import com.xeiam.xchange.currency.CurrencyPair;
 import com.xeiam.xchange.dto.Order;
-import com.xeiam.xchange.dto.account.AccountInfo;
+import com.xeiam.xchange.dto.account.Balance;
+import com.xeiam.xchange.dto.account.Wallet;
 import com.xeiam.xchange.dto.marketdata.OrderBook;
 import com.xeiam.xchange.dto.marketdata.Ticker;
 import com.xeiam.xchange.dto.marketdata.Trade;
@@ -52,7 +52,6 @@ import com.xeiam.xchange.dto.trade.LimitOrder;
 import com.xeiam.xchange.dto.trade.OpenOrders;
 import com.xeiam.xchange.dto.trade.UserTrade;
 import com.xeiam.xchange.dto.trade.UserTrades;
-import com.xeiam.xchange.dto.trade.Wallet;
 import com.xeiam.xchange.service.polling.trade.params.TradeHistoryParamsSorted;
 
 /**
@@ -111,19 +110,19 @@ public class CoinmateAdapters {
     return new Trades(trades, Trades.TradeSortType.SortByID);
   }
 
-  public static AccountInfo adaptAccountInfo(CoinmateBalance coinmateBalance) {
+  public static Wallet adaptWallet(CoinmateBalance coinmateBalance) {
 
-    Map<String, Wallet> wallets = new HashMap<String, Wallet>();
     CoinmateBalanceData funds = coinmateBalance.getData();
+    List<Balance> balances = new ArrayList<Balance>(funds.size());
 
     for (String lcCurrency : funds.keySet()) {
-      String currency = lcCurrency.toUpperCase();
-      Wallet wallet = new Wallet(currency, funds.get(lcCurrency).getBalance(), funds.get(lcCurrency).getAvailable(),
+      Currency currency = Currency.getInstance(lcCurrency.toUpperCase());
+      Balance balance = new Balance(currency, funds.get(lcCurrency).getBalance(), funds.get(lcCurrency).getAvailable(),
           funds.get(lcCurrency).getReserved());
 
-      wallets.put(currency, wallet);
+      balances.add(balance);
     }
-    return new AccountInfo(null, wallets);
+    return new Wallet(balances);
   }
 
   public static UserTrades adaptTradeHistory(CoinmateTransactionHistory coinmateTradeHistory) {

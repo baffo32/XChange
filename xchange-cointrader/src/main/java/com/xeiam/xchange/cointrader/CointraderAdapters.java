@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,15 +11,16 @@ import com.xeiam.xchange.cointrader.dto.account.CointraderBalance;
 import com.xeiam.xchange.cointrader.dto.marketdata.CointraderOrderBook;
 import com.xeiam.xchange.cointrader.dto.trade.CointraderOrder;
 import com.xeiam.xchange.cointrader.dto.trade.CointraderUserTrade;
+import com.xeiam.xchange.currency.Currency;
 import com.xeiam.xchange.currency.CurrencyPair;
 import com.xeiam.xchange.dto.Order;
-import com.xeiam.xchange.dto.account.AccountInfo;
+import com.xeiam.xchange.dto.account.Wallet;
 import com.xeiam.xchange.dto.marketdata.OrderBook;
 import com.xeiam.xchange.dto.marketdata.Trades.TradeSortType;
 import com.xeiam.xchange.dto.trade.LimitOrder;
 import com.xeiam.xchange.dto.trade.UserTrade;
 import com.xeiam.xchange.dto.trade.UserTrades;
-import com.xeiam.xchange.dto.trade.Wallet;
+import com.xeiam.xchange.dto.account.Balance;
 
 public final class CointraderAdapters {
 
@@ -40,13 +40,15 @@ public final class CointraderAdapters {
   private CointraderAdapters() {
   }
 
-  public static AccountInfo adaptAccountInfo(Map<String, CointraderBalance> balances, String userName) {
-    HashMap<String, Wallet> wallets = new HashMap<String, Wallet>();
+  public static Wallet adaptWallet(Map<String, CointraderBalance> balances) {
+    List<Balance> wallet = new ArrayList<Balance>(balances.size());
     for (String currency : balances.keySet()) {
+      Currency xchangeCurrency = Currency.getInstance(currency);
       CointraderBalance blc = balances.get(currency);
-      wallets.put(currency, new Wallet(currency, blc.getTotal(), blc.getAvailable()));
+      wallet.add(new Balance(xchangeCurrency, blc.getTotal(), blc.getAvailable()));
+
     }
-    return new AccountInfo(userName, wallets);
+    return new Wallet(wallet);
   }
 
   public static OrderBook adaptOrderBook(CointraderOrderBook cointraderOrderBook) {
@@ -84,7 +86,7 @@ public final class CointraderAdapters {
     return new UserTrade(adaptOrderType(cointraderUserTrade.getType()), cointraderUserTrade.getQuantity(), currencyPair,
         cointraderUserTrade.getPrice().abs(), cointraderUserTrade.getExecuted(), String.valueOf(cointraderUserTrade.getTradeId()),
         String.valueOf(cointraderUserTrade.getOrderId()), cointraderUserTrade.getFee(),
-        cointraderUserTrade.getType() == CointraderOrder.Type.Buy ? currencyPair.counterSymbol : currencyPair.baseSymbol);
+        cointraderUserTrade.getType() == CointraderOrder.Type.Buy ? currencyPair.counter.getCurrencyCode() : currencyPair.base.getCurrencyCode());
   }
 
   public static Order.OrderType adaptOrderType(CointraderOrder.Type orderType) {

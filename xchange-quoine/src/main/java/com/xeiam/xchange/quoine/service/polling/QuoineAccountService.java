@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 import com.xeiam.xchange.BaseExchange;
+import com.xeiam.xchange.currency.Currency;
 import com.xeiam.xchange.dto.account.AccountInfo;
 import com.xeiam.xchange.exceptions.NotAvailableFromExchangeException;
 import com.xeiam.xchange.quoine.QuoineAdapters;
@@ -37,22 +38,22 @@ public class QuoineAccountService extends QuoineAccountServiceRaw implements Pol
   public AccountInfo getAccountInfo() throws IOException {
     if (useMargin) {
       QuoineTradingAccountInfo[] quoineTradingAccountInfo = getQuoineTradingAccountInfo();
-      return QuoineAdapters.adaptTradingAccountInfo(quoineTradingAccountInfo);
+      return new AccountInfo(QuoineAdapters.adaptTradingWallet(quoineTradingAccountInfo));
 
     } else {
       QuoineAccountInfo quoineAccountInfo = getQuoineAccountInfo();
-      return QuoineAdapters.adaptAccountinfo(quoineAccountInfo);
+      return new AccountInfo(QuoineAdapters.adaptWallet(quoineAccountInfo));
     }
   }
 
   @Override
-  public String withdrawFunds(String currency, BigDecimal amount, String address) throws IOException {
+  public String withdrawFunds(Currency currency, BigDecimal amount, String address) throws IOException {
 
     throw new NotAvailableFromExchangeException();
   }
 
   @Override
-  public String requestDepositAddress(String currency, String... args) throws IOException {
+  public String requestDepositAddress(Currency currency, String... args) throws IOException {
 
     throw new NotAvailableFromExchangeException();
   }
