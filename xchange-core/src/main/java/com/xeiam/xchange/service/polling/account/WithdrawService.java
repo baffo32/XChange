@@ -1,7 +1,7 @@
 package com.xeiam.xchange.service.polling.account;
 
 import com.xeiam.xchange.Exchange;
-import com.xeiam.xchange.dto.account.AccountInfo;
+import com.xeiam.xchange.currency.Currency;
 import com.xeiam.xchange.exceptions.ExchangeException;
 import com.xeiam.xchange.exceptions.NotYetImplementedForExchangeException;
 
@@ -30,6 +30,6 @@ public interface WithdrawService extends AccountService {
    *         implemented
    * @throws IOException - Indication that a networking error occurred while fetching JSON data
    */
-   String withdrawFunds(String currency, BigDecimal amount, String address)
+   String withdrawFunds(Currency currency, BigDecimal amount, String address)
       throws ExchangeException, NotYetImplementedForExchangeException, IOException;
 }

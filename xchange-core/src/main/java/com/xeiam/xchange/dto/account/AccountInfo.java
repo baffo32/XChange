@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.xeiam.xchange.dto.meta.AccountMetaData;
+
 /**
  * <p>
  * DTO representing account information
@@ -18,14 +20,9 @@ import java.util.Map;
 public final class AccountInfo {
 
   /**
-   * The name on the account
+   * Metadata for the account, including the username and trading fee.
    */
-  private final String username;
-
-  /**
-   * The current fee this account must pay as a fraction of the value of each trade.  Null if there is no such fee.
-   */
-  private final BigDecimal tradingFee;
+  private final AccountMetaData metaData;
 
   /**
    * The wallets owned by this account
@@ -75,9 +72,6 @@ public final class AccountInfo {
    */
   public AccountInfo(String username, BigDecimal tradingFee, Collection<Wallet> wallets) {
 
-    this.username = username;
-    this.tradingFee = tradingFee;
-
     if (wallets.size() == 0) {
       this.wallets = Collections.emptyMap();
     } else if (wallets.size() == 1) {
@@ -92,6 +86,7 @@ public final class AccountInfo {
       }
     }
 
+    this.metaData = new AccountMetaData(username, tradingFee, this.wallets.keySet());
   }
 
   /**
@@ -111,14 +106,11 @@ public final class AccountInfo {
   }
 
   /**
-   * Gets wallet for accounts which don't use multiple wallets with ids
+   * Gets wallet for accounts which don't use multiple wallets
    */
   public Wallet getWallet() {
 
-    if (wallets.size() != 1)
-      throw new UnsupportedOperationException(wallets.size() + " wallets in account");
-
-    return getWallet(null);
+    return getWallet(metaData.getWalletId());
   }
 
   /**
@@ -130,26 +122,39 @@ public final class AccountInfo {
   }
 
   /**
-   * @return The user name
+   * @return The account metadata, including username and trading fee
    */
+  public AccountMetaData getMetaData() {
+
+    return metaData;
+  }
+
+
+  /**
+   * @return The user name
+   * @deprecated use {@link #getMetaData}
+   */
+  @Deprecated
   public String getUsername() {
 
-    return username;
+    return metaData.getUsername();
   }
 
   /**
    * Returns the current trading fee
    *
    * @return The trading fee
+   * @deprecated use {@link #getMetaData}
    */
+  @Deprecated
   public BigDecimal getTradingFee() {
 
-    return tradingFee;
+    return metaData.getTradingFee();
   }
 
   @Override
   public String toString() {
 
-    return "AccountInfo [username=" + username + ", tradingFee=" + tradingFee + ", wallets=" + wallets + "]";
+    return "AccountInfo [metaData=" + metaData + ", wallets=" + wallets + "]";
   }
 }

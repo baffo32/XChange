@@ -1,8 +1,9 @@
 package com.xeiam.xchange.service.polling.params;
 
 /**
- * {@link QueryParams} with no parameters
+ * {@link QueryParams} with no parameters, or in which all parameters are optional
  */
-public class ParamsZero implements QueryParams {
-  final public static QueryParams PARAMS_ZERO = new ParamsZero();
+public interface ParamsZero extends QueryParams {
+
+  final public static QueryParams PARAMS_ZERO = new ParamsZero() {};
 }

@@ -1,12 +1,10 @@
-package com.xeiam.xchange.service.polling.marketdata;
+package com.xeiam.xchange.service.polling.account;
 
 import java.io.IOException;
 
 import com.xeiam.xchange.Exchange;
-import com.xeiam.xchange.currency.CurrencyPair;
-import com.xeiam.xchange.dto.marketdata.Ticker;
+import com.xeiam.xchange.dto.meta.AccountMetaData;
 import com.xeiam.xchange.exceptions.ExchangeException;
-import com.xeiam.xchange.exceptions.NotAvailableFromExchangeException;
 import com.xeiam.xchange.exceptions.NotYetImplementedForExchangeException;
 
 /**
@@ -14,23 +12,20 @@ import com.xeiam.xchange.exceptions.NotYetImplementedForExchangeException;
  * Interface to provide the following to {@link Exchange}:
  * </p>
  * <ul>
- * <li>Standard method to poll the latest market {@link Ticker}.</li>
+ * <li>Standard method to poll the {@link AccountMetaData}.</li>
  * </ul>
  */
-public interface TickerService extends MarketDataService {
+public interface MetaDataService extends AccountService {
 
   /**
-   * <p>
-   * Get a ticker representing the current exchange rate
-   * </p>
+   * Get account meta data
    *
-   * @param currencyPair (e.g. BTC/USD)
-   * @return The ticker, null if some sort of error occurred. Implementers should log the error.
+   * @return The account meta data, null if some sort of error occurred. Implementers should log the error.
    * @throws ExchangeException - Indication that the exchange reported some kind of error with the request or response
    * @throws NotYetImplementedForExchangeException - Indication that the exchange supports the requested function or data, but it has not yet been
    *         implemented
    * @throws IOException - Indication that a networking error occurred while fetching JSON data
    */
-  Ticker getTicker(CurrencyPair currencyPair)
+  AccountMetaData getMetaData()
       throws ExchangeException, NotYetImplementedForExchangeException, IOException;
 }

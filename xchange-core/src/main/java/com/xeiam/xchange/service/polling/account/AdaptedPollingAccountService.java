@@ -1,19 +1,12 @@
 package com.xeiam.xchange.service.polling.account;
 
 import com.xeiam.xchange.Exchange;
-import com.xeiam.xchange.currency.CurrencyPair;
+import com.xeiam.xchange.currency.Currency;
 import com.xeiam.xchange.dto.account.AccountInfo;
-import com.xeiam.xchange.dto.marketdata.OrderBook;
-import com.xeiam.xchange.dto.marketdata.Ticker;
-import com.xeiam.xchange.dto.marketdata.Trades;
 import com.xeiam.xchange.exceptions.ExchangeException;
 import com.xeiam.xchange.exceptions.NotAvailableFromExchangeException;
 import com.xeiam.xchange.exceptions.NotYetImplementedForExchangeException;
 import com.xeiam.xchange.service.polling.BasePollingExchangeService;
-import com.xeiam.xchange.service.polling.marketdata.*;
-import com.xeiam.xchange.service.polling.params.DefaultParamCurrencyPair;
-import com.xeiam.xchange.service.polling.params.ParamCurrencyPair;
-import com.xeiam.xchange.service.polling.params.QueryParams;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -38,13 +31,13 @@ public class AdaptedPollingAccountService extends BasePollingExchangeService imp
     return pollingAccountService.getAccountInfo();
   }
 
-  @Override public String requestDepositAddress(String currency) throws ExchangeException, NotAvailableFromExchangeException,
+  @Override public String requestDepositAddress(Currency currency) throws ExchangeException, NotAvailableFromExchangeException,
       NotYetImplementedForExchangeException, IOException {
 
     return pollingAccountService.requestDepositAddress(currency);
   }
 
-  @Override public String withdrawFunds(String currency, BigDecimal amount, String address)
+  @Override public String withdrawFunds(Currency currency, BigDecimal amount, String address)
       throws ExchangeException, NotAvailableFromExchangeException, NotYetImplementedForExchangeException, IOException {
 
     return pollingAccountService.requestDepositAddress(currency);

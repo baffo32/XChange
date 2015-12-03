@@ -9,12 +9,12 @@ import com.xeiam.xchange.currency.CurrencyPair;
  * exceptions, if that all the required fields are non-null) passed to any polling service implementation which accepts an interface in this package.
  */
 public class ParamsAll
-    implements ParamsTimeSpan, ParamPaging, ParamsIdSpan, ParamOffset, ParamCurrencyPair {
+    implements ParamsTimeSpan, ParamCurrencyPair, ParamId, ParamPaging, ParamsIdSpan, ParamOffset {
 
   private Integer pageLength;
   private Integer pageNumber;
-  private Long startId;
-  private Long endId;
+  private String startId;
+  private String endId;
   private Date startTime;
   private Date endTime;
   private Long offset;
@@ -33,27 +33,39 @@ public class ParamsAll
   }
 
   @Override
+  public String getId() {
+
+    return startId.toString();
+  }
+
+  @Override
+  public void setId(String id) {
+
+    startId = id;
+  }
+
+  @Override
   public Long getStartId() {
 
-    return startId;
+    return new Long(startId);
   }
 
   @Override
   public void setEndId(Long endId) {
 
-    this.endId = endId;
+    this.endId = endId.toString();
   }
 
   @Override
   public Long getEndId() {
 
-    return endId;
+    return new Long(endId);
   }
 
   @Override
   public void setStartId(Long from) {
 
-    startId = from;
+    startId = from.toString();
   }
 
   @Override

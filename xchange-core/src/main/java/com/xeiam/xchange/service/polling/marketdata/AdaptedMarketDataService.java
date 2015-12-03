@@ -32,15 +32,19 @@ public class AdaptedMarketDataService extends BasePollingExchangeService impleme
   public Ticker getTicker(CurrencyPair currencyPair, Object... args) throws ExchangeException, NotAvailableFromExchangeException,
       NotYetImplementedForExchangeException, IOException {
 
-    if (!(marketDataService instanceof TickerService))
+    if (!(marketDataService instanceof TickersService))
       throw new NotAvailableFromExchangeException();
 
-    TickerService tickerService = (TickerService) marketDataService;
+    TickersService tickersService = (TickersService) marketDataService;
+
+    QueryParams tickersParams = tickersService.createTickersParams();
+    if (tickersParams instanceof ParamCurrencyPair)
+      ((ParamCurrencyPair)tickersParams).setCurrencyPair(currencyPair);
 
     if (args.length != 0)
       throw new NotYetImplementedForExchangeException("Arg parsing not implemented for deprecated wrapper.  Upgrade interface or implement!");
 
-    return tickerService.getTicker(currencyPair);
+    return tickersService.getTickers(tickersParams).get(currencyPair);
   }
 
   @Override
@@ -52,14 +56,14 @@ public class AdaptedMarketDataService extends BasePollingExchangeService impleme
 
     OrderBookService orderBookService = (OrderBookService) marketDataService;
 
-    QueryParams orderBookParams = orderBookService.createOrderBookParams();
+    QueryParams orderBookParams = orderBookService.createOrderBooksParams();
     if (orderBookParams instanceof ParamCurrencyPair)
       ((ParamCurrencyPair)orderBookParams).setCurrencyPair(currencyPair);
 
     if (args.length != 0)
       throw new NotYetImplementedForExchangeException("Arg parsing not implemented for deprecated wrapper.  Upgrade interface or implement!");
 
-    return orderBookService.getOrderBook(orderBookParams);
+    return orderBookService.getOrderBooks(orderBookParams).get(currencyPair);
   }
 
   @Override

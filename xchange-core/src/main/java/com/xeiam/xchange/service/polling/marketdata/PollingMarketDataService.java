@@ -2,7 +2,6 @@ package com.xeiam.xchange.service.polling.marketdata;
 
 import java.io.IOException;
 
-import com.xeiam.xchange.Exchange;
 import com.xeiam.xchange.currency.CurrencyPair;
 import com.xeiam.xchange.dto.marketdata.OrderBook;
 import com.xeiam.xchange.dto.marketdata.Ticker;
@@ -10,7 +9,6 @@ import com.xeiam.xchange.dto.marketdata.Trades;
 import com.xeiam.xchange.exceptions.ExchangeException;
 import com.xeiam.xchange.exceptions.NotAvailableFromExchangeException;
 import com.xeiam.xchange.exceptions.NotYetImplementedForExchangeException;
-import com.xeiam.xchange.service.polling.BasePollingService;
 
 /**
  * @deprecated Implement individual interfaces in this package separately.

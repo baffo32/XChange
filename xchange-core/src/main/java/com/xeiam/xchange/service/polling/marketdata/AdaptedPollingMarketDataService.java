@@ -14,12 +14,14 @@ import com.xeiam.xchange.service.polling.params.ParamCurrencyPair;
 import com.xeiam.xchange.service.polling.params.QueryParams;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * @deprecated Wraps {@link PollingMarketDataService} as {@link MarketDataService}
  */
 @Deprecated
-public class AdaptedPollingMarketDataService extends BasePollingExchangeService implements OrderBookService, TickerService, TradesService {
+public class AdaptedPollingMarketDataService extends BasePollingExchangeService implements OrderBookService, TickersService, TradesService {
 
   private PollingMarketDataService pollingMarketDataService;
 
@@ -30,23 +32,31 @@ public class AdaptedPollingMarketDataService extends BasePollingExchangeService 
   }
 
   @Override
-  public OrderBook getOrderBook(QueryParams params) throws ExchangeException, NotAvailableFromExchangeException,
+  public Map<CurrencyPair,OrderBook> getOrderBooks(QueryParams params) throws ExchangeException, NotAvailableFromExchangeException,
       NotYetImplementedForExchangeException, IOException {
 
-    return pollingMarketDataService.getOrderBook(((ParamCurrencyPair)params).getCurrencyPair());
+    CurrencyPair currencyPair = ((ParamCurrencyPair) params).getCurrencyPair();
+    return Collections.singletonMap(currencyPair, pollingMarketDataService.getOrderBook(currencyPair));
   }
 
   @Override
-  public QueryParams createOrderBookParams() {
+  public QueryParams createOrderBooksParams() {
 
     return new DefaultParamCurrencyPair();
   }
 
   @Override
-  public Ticker getTicker(CurrencyPair currencyPair) throws ExchangeException, NotAvailableFromExchangeException,
+  public Map<CurrencyPair,Ticker> getTickers(QueryParams params) throws ExchangeException, NotAvailableFromExchangeException,
       NotYetImplementedForExchangeException, IOException {
 
-    return pollingMarketDataService.getTicker(currencyPair);
+    CurrencyPair currencyPair = ((ParamCurrencyPair) params).getCurrencyPair();
+    return Collections.singletonMap(currencyPair, pollingMarketDataService.getTicker(currencyPair));
+  }
+
+  @Override
+  public QueryParams createTickersParams() {
+
+    return new DefaultParamCurrencyPair();
   }
 
   @Override
